@@ -25,7 +25,7 @@ export default function TelaClima() {
     setClima(null);
 
     try {
-      const resposta = await axios.get(https://api.hgbrasil.com/weather, {
+      const resposta = await axios.get('https://api.hgbrasil.com/weather', {
         params: {
           key: chave,
           city_name: cidade,
@@ -35,17 +35,17 @@ export default function TelaClima() {
       if (resposta.data && resposta.data.results) {
         setClima(resposta.data.results);
       } else {
-        alert('Cidade não encontrada ou problema na resposta da API.');
+        alert('Cidade não encontrada');
       }
     } catch (erro) {
-      alert('Erro ao buscar dados. Verifique a conexão ou a chave da API.');
+      alert('Erro ao buscar dados');
     } finally {
       setCarregando(false);
     }
   };
 
   const getIconUri = (condition) =>
-    https://assets.hgbrasil.com/weather/icons/conditions/${condition}.svg;
+    `https://assets.hgbrasil.com/weather/icons/conditions/${condition}.svg`;
 
   return (
     <ScrollView contentContainerStyle={estilos.container}>
@@ -94,38 +94,28 @@ export default function TelaClima() {
             </Text>
           </View>
 
-          <View style={estilos.cartao}>
-            <Text style={estilos.tituloSecao}>Hoje</Text>
-            <View style={estilos.linhaHoras}>
-              {[clima.temp + 1, clima.temp, clima.temp - 1, clima.temp - 2].map((t, indice) => (
-                <View key={indice} style={estilos.caixaHora}>
-                  <Text style={estilos.temperaturaHora}>{t}ºC</Text>
-                  <SvgUri
-                    width={32}
-                    height={32}
-                    uri={getIconUri(clima.condition_slug)}
-                  />
-                  <Text style={estilos.horaTexto}>{15 + indice}:00</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-
+          {/* Próximos dias */}
           <View style={estilos.cartao}>
             <Text style={estilos.tituloSecao}>Próximos dias</Text>
-            {clima.forecast.slice(1, 3).map((dia, indice) => (
-              <View key={indice} style={estilos.linhaPrevisao}>
-                <Text style={estilos.diaPrevisao}>{dia.weekday}</Text>
-                <SvgUri
-                  width={24}
-                  height={24}
-                  uri={getIconUri(dia.condition)}
-                />
-                <Text style={estilos.tempPrevisao}>
-                  {dia.max}º  |  {dia.min}º
-                </Text>
-              </View>
-            ))}
+            {clima.forecast && clima.forecast.length > 1 ? (
+              clima.forecast.slice(1, 6).map((dia, indice) => (
+                <View key={indice} style={estilos.linhaPrevisao}>
+                  <Text style={estilos.diaPrevisao}>{dia.weekday}</Text>
+                  {/* Exibe o condition para debug */}
+                  <Text style={{ color: 'white', marginRight: 5 }}>{dia.condition}</Text>
+                  <SvgUri
+                    width={24}
+                    height={24}
+                    uri={getIconUri(dia.condition)}
+                  />
+                  <Text style={estilos.tempPrevisao}>
+                    {dia.max}º  |  {dia.min}º
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <Text style={{ color: 'white' }}>Previsão não disponível</Text>
+            )}
           </View>
         </>
       )}
@@ -199,21 +189,6 @@ const estilos = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     marginBottom: 10,
-  },
-  linhaHoras: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  caixaHora: {
-    alignItems: 'center',
-  },
-  temperaturaHora: {
-    color: 'white',
-    fontSize: 16,
-  },
-  horaTexto: {
-    color: 'white',
-    fontSize: 14,
   },
   linhaPrevisao: {
     flexDirection: 'row',
