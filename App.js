@@ -6,7 +6,7 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
 import { SvgUri } from 'react-native-svg';
@@ -25,7 +25,7 @@ export default function TelaClima() {
     setClima(null);
 
     try {
-      const resposta = await axios.get(`https://api.hgbrasil.com/weather`, {
+      const resposta = await axios.get(https://api.hgbrasil.com/weather, {
         params: {
           key: chave,
           city_name: cidade,
@@ -45,7 +45,7 @@ export default function TelaClima() {
   };
 
   const getIconUri = (condition) =>
-    `https://assets.hgbrasil.com/weather/icons/conditions/${condition}.svg`;
+    https://assets.hgbrasil.com/weather/icons/conditions/${condition}.svg;
 
   return (
     <ScrollView contentContainerStyle={estilos.container}>
@@ -65,9 +65,7 @@ export default function TelaClima() {
       {carregando && (
         <View style={{ marginTop: 20 }}>
           <ActivityIndicator size="large" color="#fff" />
-          <Text style={{ color: 'white', marginTop: 10 }}>
-            Carregando clima...
-          </Text>
+          <Text style={{ color: 'white', marginTop: 10 }}>Carregando clima...</Text>
         </View>
       )}
 
@@ -99,19 +97,17 @@ export default function TelaClima() {
           <View style={estilos.cartao}>
             <Text style={estilos.tituloSecao}>Hoje</Text>
             <View style={estilos.linhaHoras}>
-              {[clima.temp + 1, clima.temp, clima.temp - 1, clima.temp - 2].map(
-                (t, indice) => (
-                  <View key={indice} style={estilos.caixaHora}>
-                    <Text style={estilos.temperaturaHora}>{t}ºC</Text>
-                    <SvgUri
-                      width={20}
-                      height={20}
-                      uri={getIconUri(clima.condition_slug)}
-                    />
-                    <Text style={estilos.horaTexto}>{15 + indice}:00</Text>
-                  </View>
-                )
-              )}
+              {[clima.temp + 1, clima.temp, clima.temp - 1, clima.temp - 2].map((t, indice) => (
+                <View key={indice} style={estilos.caixaHora}>
+                  <Text style={estilos.temperaturaHora}>{t}ºC</Text>
+                  <SvgUri
+                    width={32}
+                    height={32}
+                    uri={getIconUri(clima.condition_slug)}
+                  />
+                  <Text style={estilos.horaTexto}>{15 + indice}:00</Text>
+                </View>
+              ))}
             </View>
           </View>
 
